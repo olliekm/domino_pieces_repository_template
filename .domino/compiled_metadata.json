@@ -1,141 +1,67 @@
 {
-    "ExampleSleepPiece": {
-        "name": "ExampleSleepPiece",
+    "HttpRequestBatchPiece": {
+        "name": "HttpRequestBatchPiece",
         "dependency": {
             "dockerfile": null,
             "requirements_file": "requirements_0.txt"
         },
         "tags": [
-            "Example"
+            "default",
+            "http"
         ],
         "style": {
-            "node_label": "Example Sleep Piece",
+            "node_label": "HTTP Request Batch",
             "node_type": "default",
             "node_style": {
                 "backgroundColor": "#ebebeb"
             },
             "useIcon": true,
-            "icon_class_name": "fa-solid:database",
+            "icon_class_name": "ic:twotone-http",
             "iconStyle": {
                 "cursor": "pointer"
             }
         },
-        "description": "This is an example of a simple Domino Piece that sleep for N seconds",
-        "container_resources": {
-            "requests": {
-                "cpu": 100,
-                "memory": 128
-            },
-            "limits": {
-                "cpu": 500,
-                "memory": 512
-            }
-        },
+        "description": "A Piece that fetches N URLs in parallel and returns their contents as base64 strings.",
         "input_schema": {
-            "description": "Sleep Piece Input Model",
             "properties": {
-                "sleep_time": {
-                    "default": 1,
-                    "description": "Number of seconds to sleep",
-                    "title": "Sleep Time",
-                    "type": "number"
-                }
-            },
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "description": "Sleep Piece Output Model",
-            "properties": {
-                "message": {
-                    "description": "Sleep piece executed",
-                    "title": "Message",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "message"
-            ],
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/ExampleSleepPiece"
-    },
-    "ExampleSineWavePiece": {
-        "name": "ExampleSineWavePiece",
-        "dependency": {
-            "dockerfile": "Dockerfile_1",
-            "requirements_file": null
-        },
-        "tags": [
-            "Example"
-        ],
-        "style": {
-            "node_label": "Example Sine Piece",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "fa-solid:database",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "This is an example of a piece that uses Dockerfile for dependencies.",
-        "container_resources": {
-            "requests": {
-                "cpu": 100,
-                "memory": 128
-            },
-            "limits": {
-                "cpu": 500,
-                "memory": 512
-            }
-        },
-        "input_schema": {
-            "description": "Sleep Piece Input Model",
-            "properties": {
-                "frequency": {
+                "urls": {
+                    "description": "List of URLs to fetch via GET request.",
+                    "from_upstream": "allowed",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Urls",
+                    "type": "array"
+                },
+                "max_workers": {
                     "default": 5,
-                    "description": "Frequency of the sine wave in Hz",
-                    "title": "Frequency",
-                    "type": "integer"
-                },
-                "duration": {
-                    "default": 1,
-                    "description": "Duration of the sine wave signal in seconds",
-                    "title": "Duration",
-                    "type": "integer"
-                },
-                "sample_rate": {
-                    "default": 1000,
-                    "description": "Sample rate of the sine wave signal.",
-                    "title": "Sample Rate",
+                    "description": "Maximum number of URLs to fetch concurrently.",
+                    "title": "Max Workers",
                     "type": "integer"
                 }
             },
+            "required": [
+                "urls"
+            ],
             "title": "InputModel",
             "type": "object"
         },
         "output_schema": {
-            "description": "Sleep Piece Output Model",
             "properties": {
-                "message": {
-                    "description": "Sleep piece executed",
-                    "title": "Message",
-                    "type": "string"
+                "file_paths": {
+                    "description": "List of file paths where the fetched content was saved, in the same order as the input URLs.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "File Paths",
+                    "type": "array"
                 }
             },
-            "required": [
-                "message"
-            ],
             "title": "OutputModel",
             "type": "object"
         },
         "secrets_schema": null,
-        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/ExampleSineWavePiece"
+        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/HttpRequestBatchPiece"
     },
     "ImageFilterBatchPiece": {
         "name": "ImageFilterBatchPiece",
@@ -301,69 +227,5 @@
         },
         "secrets_schema": null,
         "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/ImageFilterBatchPiece"
-    },
-    "HttpRequestBatchPiece": {
-        "name": "HttpRequestBatchPiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [
-            "default",
-            "http"
-        ],
-        "style": {
-            "node_label": "HTTP Request Batch",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "ic:twotone-http",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "A Piece that fetches N URLs in parallel and returns their contents as base64 strings.",
-        "input_schema": {
-            "properties": {
-                "urls": {
-                    "description": "List of URLs to fetch via GET request.",
-                    "from_upstream": "allowed",
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Urls",
-                    "type": "array"
-                },
-                "max_workers": {
-                    "default": 5,
-                    "description": "Maximum number of URLs to fetch concurrently.",
-                    "title": "Max Workers",
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "urls"
-            ],
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "properties": {
-                "base64_bytes_data_list": {
-                    "description": "List of base64 encoded response bodies, in the same order as the input URLs.",
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Base64 Bytes Data List",
-                    "type": "array"
-                }
-            },
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/HttpRequestBatchPiece"
     }
 }
