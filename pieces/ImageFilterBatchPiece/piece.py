@@ -113,9 +113,12 @@ class ImageFilterBatchPiece(BasePiece):
                 ]
             ))
 
+        first_result = results[0]
         self.display_result = {
             "file_type": "png",
-            "images": [r.model_dump() for r in results],
+            "file_path": first_result.image_file_path,
         }
+        if first_result.image_base64_string:
+            self.display_result["base64_content"] = first_result.image_base64_string
 
         return OutputModel(images=results)
