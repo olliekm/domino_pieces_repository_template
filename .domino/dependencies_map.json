@@ -6,10 +6,10 @@
         },
         "pieces": [
             "ExampleSleepPiece",
+            "HttpRequestBatchPiece",
             "ImageFilterBatchPiece"
         ],
-        "secrets": [],
-        "source_image": "ghcr.io/ollies-pieces/nationgraph:0.2.0-group0"
+        "secrets": []
     },
     "group1": {
         "dependency": {
@@ -19,7 +19,6 @@
         "pieces": [
             "ExampleSineWavePiece"
         ],
-        "secrets": [],
-        "source_image": "ghcr.io/ollies-pieces/nationgraph:0.2.0-group1"
+        "secrets": []
     }
 }
