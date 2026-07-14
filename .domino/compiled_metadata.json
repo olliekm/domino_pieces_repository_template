@@ -137,6 +137,70 @@
         "secrets_schema": null,
         "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/ExampleSineWavePiece"
     },
+    "HttpRequestBatchPiece": {
+        "name": "HttpRequestBatchPiece",
+        "dependency": {
+            "dockerfile": null,
+            "requirements_file": "requirements_0.txt"
+        },
+        "tags": [
+            "default",
+            "http"
+        ],
+        "style": {
+            "node_label": "HTTP Request Batch",
+            "node_type": "default",
+            "node_style": {
+                "backgroundColor": "#ebebeb"
+            },
+            "useIcon": true,
+            "icon_class_name": "ic:twotone-http",
+            "iconStyle": {
+                "cursor": "pointer"
+            }
+        },
+        "description": "A Piece that fetches N URLs in parallel and returns their contents as base64 strings.",
+        "input_schema": {
+            "properties": {
+                "urls": {
+                    "description": "List of URLs to fetch via GET request.",
+                    "from_upstream": "allowed",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Urls",
+                    "type": "array"
+                },
+                "max_workers": {
+                    "default": 5,
+                    "description": "Maximum number of URLs to fetch concurrently.",
+                    "title": "Max Workers",
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "urls"
+            ],
+            "title": "InputModel",
+            "type": "object"
+        },
+        "output_schema": {
+            "properties": {
+                "base64_bytes_data_list": {
+                    "description": "List of base64 encoded response bodies, in the same order as the input URLs.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "title": "Base64 Bytes Data List",
+                    "type": "array"
+                }
+            },
+            "title": "OutputModel",
+            "type": "object"
+        },
+        "secrets_schema": null,
+        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/HttpRequestBatchPiece"
+    },
     "ImageFilterBatchPiece": {
         "name": "ImageFilterBatchPiece",
         "dependency": {
@@ -301,69 +365,5 @@
         },
         "secrets_schema": null,
         "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/ImageFilterBatchPiece"
-    },
-    "HttpRequestBatchPiece": {
-        "name": "HttpRequestBatchPiece",
-        "dependency": {
-            "dockerfile": null,
-            "requirements_file": "requirements_0.txt"
-        },
-        "tags": [
-            "default",
-            "http"
-        ],
-        "style": {
-            "node_label": "HTTP Request Batch",
-            "node_type": "default",
-            "node_style": {
-                "backgroundColor": "#ebebeb"
-            },
-            "useIcon": true,
-            "icon_class_name": "ic:twotone-http",
-            "iconStyle": {
-                "cursor": "pointer"
-            }
-        },
-        "description": "A Piece that fetches N URLs in parallel and returns their contents as base64 strings.",
-        "input_schema": {
-            "properties": {
-                "urls": {
-                    "description": "List of URLs to fetch via GET request.",
-                    "from_upstream": "allowed",
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Urls",
-                    "type": "array"
-                },
-                "max_workers": {
-                    "default": 5,
-                    "description": "Maximum number of URLs to fetch concurrently.",
-                    "title": "Max Workers",
-                    "type": "integer"
-                }
-            },
-            "required": [
-                "urls"
-            ],
-            "title": "InputModel",
-            "type": "object"
-        },
-        "output_schema": {
-            "properties": {
-                "base64_bytes_data_list": {
-                    "description": "List of base64 encoded response bodies, in the same order as the input URLs.",
-                    "items": {
-                        "type": "string"
-                    },
-                    "title": "Base64 Bytes Data List",
-                    "type": "array"
-                }
-            },
-            "title": "OutputModel",
-            "type": "object"
-        },
-        "secrets_schema": null,
-        "source_url": "https://github.com/olliekm/domino_pieces_repository_template/tree/main/pieces/HttpRequestBatchPiece"
     }
 }

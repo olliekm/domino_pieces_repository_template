@@ -5,8 +5,13 @@ import requests
 import base64
 
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (compatible; DominoHttpRequestBatchPiece/1.0)"
+}
+
+
 def _fetch_one(url: str) -> str:
-    response = requests.get(url)
+    response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
     return base64.b64encode(response.content).decode('utf-8')
 
