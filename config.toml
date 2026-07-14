@@ -1,7 +1,7 @@
 [repository]
 # The name of the github organization / person owner, e.g. tauffer-consulting.
 # Must be in lower-case letters
-REGISTRY_NAME = "ollies-pieces"
+REGISTRY_NAME = "olliekm"
 
 # The name of this Pieces repository
 REPOSITORY_NAME = "nationgraph"
@@ -9,4 +9,4 @@ REPOSITORY_LABEL = "nationgraph interview test"
 
 # The version of this Pieces release
 # Attention: changing this will create a new release
-VERSION = "0.2.1"
+VERSION = "0.2.2"
