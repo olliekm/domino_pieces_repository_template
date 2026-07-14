@@ -10,7 +10,7 @@
             "HttpRequestBatchPiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/olliekm/nationgraph:0.2.3-group0"
+        "source_image": "ghcr.io/olliekm/nationgraph:0.2.4-group0"
     },
     "group1": {
         "dependency": {
@@ -21,6 +21,6 @@
             "ExampleSineWavePiece"
         ],
         "secrets": [],
-        "source_image": "ghcr.io/olliekm/nationgraph:0.2.3-group1"
+        "source_image": "ghcr.io/olliekm/nationgraph:0.2.4-group1"
     }
 }
