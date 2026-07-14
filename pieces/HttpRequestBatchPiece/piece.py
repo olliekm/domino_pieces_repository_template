@@ -2,7 +2,6 @@ from domino.base_piece import BasePiece
 from .models import InputModel, OutputModel
 from concurrent.futures import ThreadPoolExecutor
 import requests
-import base64
 
 
 HEADERS = {
@@ -10,10 +9,13 @@ HEADERS = {
 }
 
 
-def _fetch_one(url: str) -> str:
+def _fetch_one(url: str, results_path: str, idx: int) -> str:
     response = requests.get(url, headers=HEADERS)
     response.raise_for_status()
-    return base64.b64encode(response.content).decode('utf-8')
+    file_path = f"{results_path}/fetched_{idx}"
+    with open(file_path, "wb") as f:
+        f.write(response.content)
+    return file_path
 
 
 class HttpRequestBatchPiece(BasePiece):
@@ -24,6 +26,9 @@ class HttpRequestBatchPiece(BasePiece):
 
         max_workers = min(input_data.max_workers, len(input_data.urls)) or 1
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            results = list(pool.map(_fetch_one, input_data.urls))
+            results = list(pool.map(
+                lambda args: _fetch_one(*args),
+                [(url, self.results_path, idx) for idx, url in enumerate(input_data.urls)]
+            ))
 
-        return OutputModel(base64_bytes_data_list=results)
+        return OutputModel(file_paths=results)

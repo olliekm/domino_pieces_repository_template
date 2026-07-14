@@ -16,7 +16,7 @@ class InputModel(BaseModel):
 
 
 class OutputModel(BaseModel):
-    base64_bytes_data_list: List[str] = Field(
+    file_paths: List[str] = Field(
         default_factory=list,
-        description='List of base64 encoded response bodies, in the same order as the input URLs.',
+        description='List of file paths where the fetched content was saved, in the same order as the input URLs.',
     )
