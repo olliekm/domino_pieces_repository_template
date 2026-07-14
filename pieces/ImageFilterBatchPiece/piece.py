@@ -48,30 +48,33 @@ def _apply_filters(np_image: np.ndarray, all_filters: list) -> np.ndarray:
     return np_image
 
 
-def _process_one(image_input: str, all_filters: list, output_type: str, results_path: str, idx: int) -> ImageResult:
-    image = _load_image(image_input)
+def _process_one(image_input: str, all_filters: list, output_type: str, results_path: str, idx: int) -> tuple[ImageResult | None, str | None]:
+    try:
+        image = _load_image(image_input)
 
-    np_image = np.array(image, dtype=float)
-    np_image = _apply_filters(np_image, all_filters)
+        np_image = np.array(image, dtype=float)
+        np_image = _apply_filters(np_image, all_filters)
 
-    np_image = np_image.astype(np.uint8)
-    modified_image = Image.fromarray(np_image)
+        np_image = np_image.astype(np.uint8)
+        modified_image = Image.fromarray(np_image)
 
-    image_file_path = ""
-    if output_type == "file" or output_type == "both":
-        image_file_path = f"{results_path}/modified_image_{idx}.png"
-        modified_image.save(image_file_path)
+        image_file_path = ""
+        if output_type == "file" or output_type == "both":
+            image_file_path = f"{results_path}/modified_image_{idx}.png"
+            modified_image.save(image_file_path)
 
-    image_base64_string = ""
-    if output_type == "base64_string" or output_type == "both":
-        buffered = BytesIO()
-        modified_image.save(buffered, format="PNG")
-        image_base64_string = base64.b64encode(buffered.getvalue()).decode('utf-8')
+        image_base64_string = ""
+        if output_type == "base64_string" or output_type == "both":
+            buffered = BytesIO()
+            modified_image.save(buffered, format="PNG")
+            image_base64_string = base64.b64encode(buffered.getvalue()).decode('utf-8')
 
-    return ImageResult(
-        image_base64_string=image_base64_string,
-        image_file_path=image_file_path,
-    )
+        return ImageResult(
+            image_base64_string=image_base64_string,
+            image_file_path=image_file_path,
+        ), None
+    except Exception as e:
+        return None, str(e)
 
 
 class ImageFilterBatchPiece(BasePiece):
@@ -105,7 +108,7 @@ class ImageFilterBatchPiece(BasePiece):
 
         max_workers = min(input_data.max_workers, len(input_data.input_images)) or 1
         with ThreadPoolExecutor(max_workers=max_workers) as pool:
-            results = list(pool.map(
+            processed = list(pool.map(
                 lambda args: _process_one(*args),
                 [
                     (img, all_filters, input_data.output_type, self.results_path, idx)
@@ -113,12 +116,28 @@ class ImageFilterBatchPiece(BasePiece):
                 ]
             ))
 
-        first_result = results[0]
-        self.display_result = {
-            "file_type": "png",
-            "file_path": first_result.image_file_path,
-        }
-        if first_result.image_base64_string:
-            self.display_result["base64_content"] = first_result.image_base64_string
+        results = []
+        for idx, (result, error) in enumerate(processed):
+            if result is not None:
+                results.append(result)
+            else:
+                self.logger.error(f"Failed to process image at index {idx} ({input_data.input_images[idx]}): {error}")
+
+        self.logger.info(f"Processed {len(results)}/{len(input_data.input_images)} images successfully")
+
+        if results:
+            first_result = results[0]
+            self.display_result = {
+                "file_type": "png",
+                "file_path": first_result.image_file_path,
+            }
+            if first_result.image_base64_string:
+                self.display_result["base64_content"] = first_result.image_base64_string
+        else:
+            self.display_result = {
+                "file_type": "txt",
+                "file_path": "",
+                "base64_content": base64.b64encode(b"No images were processed successfully.").decode('utf-8'),
+            }
 
         return OutputModel(images=results)

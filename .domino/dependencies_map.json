@@ -5,10 +5,9 @@
             "requirements_file": "requirements_0.txt"
         },
         "pieces": [
-            "ImageFilterBatchPiece",
-            "HttpRequestBatchPiece"
+            "HttpRequestBatchPiece",
+            "ImageFilterBatchPiece"
         ],
-        "secrets": [],
-        "source_image": "ghcr.io/olliekm/nationgraph:0.2.9-group0"
+        "secrets": []
     }
 }
