@@ -9,7 +9,7 @@
         "image"
     ],
     "style": {
-        "node_label": "Image Filter",
+        "node_label": "Image Filter Extended",
         "icon_class_name": "ic:twotone-filter"
     }
 }
